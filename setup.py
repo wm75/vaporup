@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name='vapor',
+setup(name='vaporup',
       version='1.0.3',
       packages=['pyvapor'],
       scripts=['vapor.py']
