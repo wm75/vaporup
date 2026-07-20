@@ -174,7 +174,7 @@ def cli():
 
     if args.version == True:
         print(vp.__version__)
-        sys.exit(1)
+        sys.exit(0)
 
     # Set some thresholds for user input
     max_kmer = 30
