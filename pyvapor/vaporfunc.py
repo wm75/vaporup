@@ -28,11 +28,8 @@ def get_kmers_set(strings, k):
 
 def rev_comp(read):
     """ Basic (slow) reverse complement """
-    read = read.replace("T", "a")
-    read = read.replace("A", "t")
-    read = read.replace("C", "g")
-    read = read.replace("G", "c")
-    return read.upper()[::-1]
+    table = str.maketrans("ATCgatcg", "TAGCtagc")
+    return read.translate(table)[::-1]
 
 def parse_and_prefilter(fqs, dbkmers, threshold, k):
     """ Parses fastq files fqs, and filters them """
