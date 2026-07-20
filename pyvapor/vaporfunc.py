@@ -4,6 +4,8 @@ import numpy as np
 import gzip
 import random
 
+_COMPLEMENT_TABLE = str.maketrans("ATCGatcg", "TAGCTAGC")
+
 def kmers2str(kmers):
     """ Takes a set off kmers and extracts their string """
     s = kmers[0]    
@@ -27,12 +29,8 @@ def get_kmers_set(strings, k):
     return kmers
 
 def rev_comp(read):
-    """ Basic (slow) reverse complement """
-    read = read.replace("T", "a")
-    read = read.replace("A", "t")
-    read = read.replace("C", "g")
-    read = read.replace("G", "c")
-    return read.upper()[::-1]
+    """Return the reverse complement of a DNA sequence."""
+    return read.translate(_COMPLEMENT_TABLE)[::-1]
 
 def parse_and_prefilter(fqs, dbkmers, threshold, k):
     """ Parses fastq files fqs, and filters them """
