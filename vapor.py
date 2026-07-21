@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-""" 
+"""
 usage: vapor.py [-h] [-q] [-k K] [-s S] [-fa FA]
                               [-fq FQ [FQ ...]]
 
@@ -12,7 +12,7 @@ required arguments:
 optional arguments:
     -h, --help          Show this help message and exit
     -q, --quiet         Suppresses output to stderr
-    --return_seqs       Returns a fasta of sequences, instead of hits       
+    --return_seqs       Returns a fasta of sequences, instead of hits
     --return_best_n     returns the best n hits [1]
     -o                  Combined output to files with prefix O, none by default
     -k                  Kmer length [21]
@@ -59,7 +59,7 @@ def blockErr():
     sys.stderr = open(os.devnull, 'w')
 
 def main(args):
-    # If quiet, don't output anything to stderr 
+    # If quiet, don't output anything to stderr
     if args.quiet:
         blockErr()
 
@@ -97,7 +97,7 @@ def main(args):
     sys.stderr.write("Got %d wdbg kmers\n" % len(wdbg.nodes))
     if args.nocache == True:
             wdbg.caching = False
-    
+
     # Cull low coverage
     sys.stderr.write("Culling kmers with coverage under %d \n" % args.min_kmer_cov)
     wdbg.cull_low(args.min_kmer_cov)
@@ -152,7 +152,7 @@ def cli():
     group.add_argument("-o", "--output_prefix", type=str, help="Prefix to write full output to, stout by default", nargs='?', default=None)
 
     parser.add_argument("-q", "--quiet", action="store_true", default=False)
-    parser.add_argument("--return_best_n", type=int, default=1)
+    parser.add_argument("--return_best_n", type=int, default=None,help="Number of best References to return (default:all)")
     parser.add_argument("-m", "--min_kmer_prop", type=float, help="Minimum proportion of matched kmers allowed for queries [default=0.1]", nargs='?', default=0.1)
     parser.add_argument("-k", type=int, help="Kmer Length [5 > int > 30, default=21]", nargs='?', default=21)
     parser.add_argument("-t", "--threshold", type=float, help="Read kmer filtering threshold [0 > float > 1, default=0.2]", nargs='?', default=0.2)
