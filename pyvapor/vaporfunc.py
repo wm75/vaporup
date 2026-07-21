@@ -6,7 +6,7 @@ import random
 
 def kmers2str(kmers):
     """ Takes a set off kmers and extracts their string """
-    s = kmers[0]    
+    s = kmers[0]
     for k in kmers[1:]:
         s += k[-1]
     return s
@@ -26,13 +26,12 @@ def get_kmers_set(strings, k):
             kmers.add(kmer)
     return kmers
 
+COMP_TABLE = str.maketrans("ACGTacgt", "TGCAtgca")
+
 def rev_comp(read):
-    """ Basic (slow) reverse complement """
-    read = read.replace("T", "a")
-    read = read.replace("A", "t")
-    read = read.replace("C", "g")
-    read = read.replace("G", "c")
-    return read.upper()[::-1]
+    """ Reverse complement using a translation table (fast, single pass) """
+    comp = read.translate(COMP_TABLE)
+    return comp[::-1]
 
 def parse_and_prefilter(fqs, dbkmers, threshold, k):
     """ Parses fastq files fqs, and filters them """
@@ -52,7 +51,7 @@ def parse_and_prefilter(fqs, dbkmers, threshold, k):
                 # Don't allow Ns in read
                 # Don't allow reads < k
                 rev = rev_comp(stripped)
-                for tmpseq in [stripped, rev]: 
+                for tmpseq in [stripped, rev]:
                     kcount = 0
                     if "N" not in tmpseq and len(tmpseq) >= k:
                         for i in range(0, len(tmpseq)-k+1, k):
@@ -62,7 +61,7 @@ def parse_and_prefilter(fqs, dbkmers, threshold, k):
                                     reads.append(tmpseq)
                                     # As soon as our threshold is exceeded, break
                                     break
-            c += 1                  
+            c += 1
             if c == 4:
                 c = 0
         f.close()
@@ -86,7 +85,7 @@ def parse_fasta_uniq(fasta, filter_Ns=True):
                 if tmps not in sseen and li > 0:
                     if ((filter_Ns == True) and "N" not in tmps) or filter_Ns == False:
                         hs.append(tmph)
-                        ss.append(tmps) 
+                        ss.append(tmps)
                         sseen.add(tmps)
                 tmph = l
                 tmps = ""
@@ -94,7 +93,7 @@ def parse_fasta_uniq(fasta, filter_Ns=True):
                 tmps += l
     hs.append(tmph)
     ss.append(tmps)
-    return hs, ss 
+    return hs, ss
 
 def subsample(reads, n):
     """ Takes a sample of n from reads """
@@ -102,5 +101,3 @@ def subsample(reads, n):
         return reads
     else:
         return random.sample(reads, n)
-
-
