@@ -152,7 +152,7 @@ def cli():
     group.add_argument("-o", "--output_prefix", type=str, help="Prefix to write full output to, stout by default", nargs='?', default=None)
 
     parser.add_argument("-q", "--quiet", action="store_true", default=False)
-    parser.add_argument("--return_best_n", type=int, default=1)
+    parser.add_argument("--return_best_n", type=int, default=None, help="Number of highest-scoring references to return [default: all]")
     parser.add_argument("-m", "--min_kmer_prop", type=float, help="Minimum proportion of matched kmers allowed for queries [default=0.1]", nargs='?', default=0.1)
     parser.add_argument("-k", type=int, help="Kmer Length [5 > int > 30, default=21]", nargs='?', default=21)
     parser.add_argument("-t", "--threshold", type=float, help="Read kmer filtering threshold [0 > float > 1, default=0.2]", nargs='?', default=0.2)
