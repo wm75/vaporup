@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-""" 
+"""
 usage: vapor.py [-h] [-q] [-k K] [-s S] [-fa FA]
                               [-fq FQ [FQ ...]]
 
@@ -12,7 +12,7 @@ required arguments:
 optional arguments:
     -h, --help          Show this help message and exit
     -q, --quiet         Suppresses output to stderr
-    --return_seqs       Returns a fasta of sequences, instead of hits       
+    --return_seqs       Returns a fasta of sequences, instead of hits
     --return_best_n     returns the best n hits [1]
     -o                  Combined output to files with prefix O, none by default
     -k                  Kmer length [21]
@@ -59,7 +59,7 @@ def blockErr():
     sys.stderr = open(os.devnull, 'w')
 
 def main(args):
-    # If quiet, don't output anything to stderr 
+    # If quiet, don't output anything to stderr
     if args.quiet:
         blockErr()
 
@@ -97,7 +97,7 @@ def main(args):
     sys.stderr.write("Got %d wdbg kmers\n" % len(wdbg.nodes))
     if args.nocache == True:
             wdbg.caching = False
-    
+
     # Cull low coverage
     sys.stderr.write("Culling kmers with coverage under %d \n" % args.min_kmer_cov)
     wdbg.cull_low(args.min_kmer_cov)
@@ -163,7 +163,7 @@ def cli():
     parser.add_argument("-dbg", "--debug_query", type=str, help="Debug query [default=all reads]", nargs='?', default=None)
     parser.add_argument("-f", "--top_seed_frac", type=float, help="Fraction of best seeds to extend [default=0.2]", nargs='?', default=0.2)
     parser.add_argument("--nocache", action="store_true", default=False)
-    parser.add_argument("-v", "--version", action="store_true", default=False)
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {vp.__version__}",)
     parser.add_argument("--low_mem", action="store_true", default=False)
 
     if len(sys.argv)==1:
@@ -171,10 +171,6 @@ def cli():
         sys.exit(1)
 
     args = parser.parse_args()
-
-    if args.version == True:
-        print(vp.__version__)
-        sys.exit(1)
 
     # Set some thresholds for user input
     max_kmer = 30
