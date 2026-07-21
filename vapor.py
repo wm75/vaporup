@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-""" 
+"""
 usage: vapor.py [-h] [-q] [-k K] [-s S] [-fa FA]
                               [-fq FQ [FQ ...]]
 
@@ -12,7 +12,7 @@ required arguments:
 optional arguments:
     -h, --help          Show this help message and exit
     -q, --quiet         Suppresses output to stderr
-    --return_seqs       Returns a fasta of sequences, instead of hits       
+    --return_seqs       Returns a fasta of sequences, instead of hits
     --return_best_n     returns the best n hits [1]
     -o                  Combined output to files with prefix O, none by default
     -k                  Kmer length [21]
@@ -59,7 +59,7 @@ def blockErr():
     sys.stderr = open(os.devnull, 'w')
 
 def main(args):
-    # If quiet, don't output anything to stderr 
+    # If quiet, don't output anything to stderr
     if args.quiet:
         blockErr()
 
@@ -67,7 +67,11 @@ def main(args):
         sys.stderr.write("WARNING: kmer sizes of less than 21 can result in contaminating sequence carryover, which may affect results. Only do this if you know your sample is pure, or have increased the filtering threshold -t sufficiently. Refer to the docs for details. \n")
 
     sys.stderr.write("Loading database sequences\n")
-    seqsh, seqs = vp.parse_fasta_uniq(args.fa)
+    seqsh, seqs = vp.parse_fasta_uniq(args.fa, filter_Ns=not args.keep_Ns)
+    if skipped>0:
+        sys.stderr.write(
+        f"WARNING: skipped {skipped} reference sequence (s) containing Ns.\n"
+        )
     sys.stderr.write("Got %d unique sequences\n" % len(seqs))
 
     # Get database kmers for filtering
@@ -97,7 +101,7 @@ def main(args):
     sys.stderr.write("Got %d wdbg kmers\n" % len(wdbg.nodes))
     if args.nocache == True:
             wdbg.caching = False
-    
+
     # Cull low coverage
     sys.stderr.write("Culling kmers with coverage under %d \n" % args.min_kmer_cov)
     wdbg.cull_low(args.min_kmer_cov)
@@ -165,7 +169,7 @@ def cli():
     parser.add_argument("--nocache", action="store_true", default=False)
     parser.add_argument("-v", "--version", action="store_true", default=False)
     parser.add_argument("--low_mem", action="store_true", default=False)
-
+    parser.add_argument("--keep_Ns", action="store_true",default=False,help="keep reference sequences containing Ns")
     if len(sys.argv)==1:
         parser.print_help(sys.stderr)
         sys.exit(1)
