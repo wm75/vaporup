@@ -67,7 +67,11 @@ def main(args):
         sys.stderr.write("WARNING: kmer sizes of less than 21 can result in contaminating sequence carryover, which may affect results. Only do this if you know your sample is pure, or have increased the filtering threshold -t sufficiently. Refer to the docs for details. \n")
 
     sys.stderr.write("Loading database sequences\n")
-    seqsh, seqs = vp.parse_fasta_uniq(args.fa)
+    seqsh, seqs = vp.parse_fasta_uniq(args.fa, filter_Ns=not args.keep_Ns)
+    if skipped>0:
+        sys.stderr.write(
+        f"WARNING: skipped {skipped} reference sequence (s) containing Ns.\n"
+        )
     sys.stderr.write("Got %d unique sequences\n" % len(seqs))
 
     # Get database kmers for filtering
@@ -152,7 +156,7 @@ def cli():
     group.add_argument("-o", "--output_prefix", type=str, help="Prefix to write full output to, stout by default", nargs='?', default=None)
 
     parser.add_argument("-q", "--quiet", action="store_true", default=False)
-    parser.add_argument("--return_best_n", type=int, default=None,help="Number of best References to return (default:all)")
+    parser.add_argument("--return_best_n", type=int, default=1)
     parser.add_argument("-m", "--min_kmer_prop", type=float, help="Minimum proportion of matched kmers allowed for queries [default=0.1]", nargs='?', default=0.1)
     parser.add_argument("-k", type=int, help="Kmer Length [5 > int > 30, default=21]", nargs='?', default=21)
     parser.add_argument("-t", "--threshold", type=float, help="Read kmer filtering threshold [0 > float > 1, default=0.2]", nargs='?', default=0.2)
@@ -165,7 +169,7 @@ def cli():
     parser.add_argument("--nocache", action="store_true", default=False)
     parser.add_argument("-v", "--version", action="store_true", default=False)
     parser.add_argument("--low_mem", action="store_true", default=False)
-
+    parser.add_argument("--keep_Ns", action="store_true",default=False,help="keep reference sequences containing Ns")
     if len(sys.argv)==1:
         parser.print_help(sys.stderr)
         sys.exit(1)
