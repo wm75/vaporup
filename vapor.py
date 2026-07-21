@@ -166,7 +166,7 @@ def cli():
     parser.add_argument("-dbg", "--debug_query", type=str, help="Debug query [default=all reads]", nargs='?', default=None)
     parser.add_argument("-f", "--top_seed_frac", type=float, help="Fraction of best seeds to extend [default=0.2]", nargs='?', default=0.2)
     parser.add_argument("--nocache", action="store_true", default=False)
-    parser.add_argument("-v", "--version", action="store_true", default=False)
+    parser.add_argument("-v", "--version", action="version", version="%(prog)s "+ vp.__version__,default=False)
     parser.add_argument("--low_mem", action="store_true", default=False)
 
     if len(sys.argv)==1:
@@ -174,10 +174,6 @@ def cli():
         sys.exit(1)
 
     args = parser.parse_args()
-
-    if args.version == True:
-        print(vp.__version__)
-        sys.exit(1)
 
     # Set some thresholds for user input
     max_kmer = 30
