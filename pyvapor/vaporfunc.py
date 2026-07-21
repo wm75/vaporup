@@ -3,6 +3,7 @@
 import numpy as np
 import gzip
 import random
+_RC_TRANS = str.maketrans('ACGTacgtNn', 'TGCATGCANN')
 
 def kmers2str(kmers):
     """ Takes a set off kmers and extracts their string """
@@ -27,12 +28,8 @@ def get_kmers_set(strings, k):
     return kmers
 
 def rev_comp(read):
-    """ Basic (slow) reverse complement """
-    read = read.replace("T", "a")
-    read = read.replace("A", "t")
-    read = read.replace("C", "g")
-    read = read.replace("G", "c")
-    return read.upper()[::-1]
+    """ Fast reverse-complement using a translation table and slice reversal"""
+    return read.translate(_RC_TRANS)[::-1]
 
 def parse_and_prefilter(fqs, dbkmers, threshold, k):
     """ Parses fastq files fqs, and filters them """
