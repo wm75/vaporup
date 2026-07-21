@@ -92,8 +92,11 @@ def parse_fasta_uniq(fasta, filter_Ns=True):
                 tmps = ""
             else:
                 tmps += l
-    hs.append(tmph)
-    ss.append(tmps)
+                
+    if tmps and tmps not in sseen:
+        if not filter_Ns or "N" not in tmps:
+            hs.append(tmph)
+            ss.append(tmps)
     return hs, ss 
 
 def subsample(reads, n):

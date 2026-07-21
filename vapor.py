@@ -67,7 +67,16 @@ def main(args):
         sys.stderr.write("WARNING: kmer sizes of less than 21 can result in contaminating sequence carryover, which may affect results. Only do this if you know your sample is pure, or have increased the filtering threshold -t sufficiently. Refer to the docs for details. \n")
 
     sys.stderr.write("Loading database sequences\n")
-    seqsh, seqs = vp.parse_fasta_uniq(args.fa)
+    if not args.allow_ns:
+        sys.stderr.write(
+        "Reference sequences containing N are skipped. "
+        "Use --allow-ns to include them.\n"
+    )
+
+    seqsh, seqs = vp.parse_fasta_uniq(
+    args.fa,
+    filter_Ns=not args.allow_ns,   
+    )
     sys.stderr.write("Got %d unique sequences\n" % len(seqs))
 
     # Get database kmers for filtering
@@ -165,6 +174,7 @@ def cli():
     parser.add_argument("--nocache", action="store_true", default=False)
     parser.add_argument("-v", "--version", action="store_true", default=False)
     parser.add_argument("--low_mem", action="store_true", default=False)
+    parser.add_argument("--allow-ns", action="store_true")
 
     if len(sys.argv)==1:
         parser.print_help(sys.stderr)
