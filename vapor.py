@@ -113,7 +113,7 @@ def main(args):
     if args.return_best_n is None:
       results = path_results
     else:
-      results = path_results[:arg.return_best_n]
+      results = path_results[:args.return_best_n]
     results = [(sr.index, sr.est_pid, sr.score) for sr in results if sr.score != -1]
     if len(results) == 0:
         sys.stderr.write("No hits. Try a lower -m threshold\n")
