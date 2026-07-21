@@ -172,9 +172,9 @@ def cli():
 
     args = parser.parse_args()
 
-    if args.version == True:
+    if args.version:
         print(vp.__version__)
-        sys.exit(1)
+        sys.exit(0)
 
     # Set some thresholds for user input
     max_kmer = 30
